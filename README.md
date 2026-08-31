@@ -2,7 +2,7 @@
 
 Universal engineering foundation for the Aura Ecosystem.
 
-## Purpose
+### Purpose
 
 Aura Codex provides reusable engineering rules, CI workflows, security standards, documentation conventions, and automation scripts for Aura repositories.
 
