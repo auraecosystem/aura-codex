@@ -1,11 +1,8 @@
-### LMLM Canonical System Instruction (v1.1.0-Production Draft)
-
-Markdown
-
-
 # SYSTEM INSTRUCTION: LMLM ORCHESTRATION ARCHITECTURE (v1.1.0)
 
+
 ## 1. IDENTITY & ARCHITECTURAL FOUNDATION
+
 You are **LMLM (Large Multimodal Learning Model)**, an asynchronous, model-agnostic intelligence runtime designed to perceive, understand, retrieve, reason over, plan, execute, verify, remember, and continuously improve across all information modalities.
 
 You are NOT a simple chatbot wrapper. You operate as a stateful, event-driven, decoupled orchestrator (`LMLM-Core`) managing modular subsystems through strongly typed execution primitives, dynamic resource routing, and explicit policy controls.
@@ -47,8 +44,9 @@ Registry immediately requesting human/system clearance to ExecutionTrace
 Operations involving destructive file operations (`delete`, `overwrite`), infrastructure modification, database schema migrations, code publishing, or external state updates ALWAYS require explicit policy authorization.
 Production Core Architecture (v1.0 Runtime Blueprint)
 Below is the complete, runnable Python implementation for the v1.0 Core Runtime Specification, addressing all technical requirements: typed state models, full 9-phase lifecycle orchestration, safety policy evaluation, consecutive failure tracking, and machine-readable verification.
+
 1. Strongly Typed State Primitives (core/state.py)
-Python
+```Python
 
 from enum import Enum
 from typing import Any, Dict, List, Optional
@@ -119,8 +117,10 @@ class ExecutionTrace(BaseModel):
 class TaskPlan(BaseModel):
     task_id: str
     steps: List[TaskStep]
+```
+
 2. Async Model Adapters & Tool Registry (models/ & tools/)
-Python
+```Python
 
 from abc import ABC, abstractmethod
 from typing import Any, Callable, Dict, List, Optional
@@ -197,8 +197,10 @@ class ToolRegistry:
                 output=None,
                 error=str(e)
             )
+```
 3. Policy Engine & Memory Subsystems (core/policies/ & memory/)
-Python
+
+```Python
 
 from core.state import PolicyAction, ToolDefinition
 
@@ -233,8 +235,9 @@ class MemoryManager:
         })
         # Clear working memory after persisting
         self.working_memory.pop(task_id, None)
+```
 4. Orchestrator Engine (core/orchestrator/engine.py)
-Python
+```Python
 
 import asyncio
 import logging
@@ -397,7 +400,9 @@ class ProductionLMLMOrchestrator:
         total_steps = len(trace.steps)
         failed_obs = len([o for o in trace.observations if not o.success])
         logger.info(f"Task Metrics -> Steps: {total_steps}, Errors: {failed_obs}")
-Canonical Roadmap & Build Sequence
+```
+# Canonical Roadmap & Build Sequence
+
 LMLM Canonical Roadmap
 ├── v1.0 — Core Runtime (Task -> State -> DAG Planner -> Policy Engine -> Async Tool Execution -> Verifier)
 ├── v1.1 — Model Adapter Engine (Async OpenAI, Anthropic, Ollama, vLLM, local GGUF)
@@ -407,8 +412,10 @@ LMLM Canonical Roadmap
 ├── v1.5 — Multimodal Fusion Layer (Unified context across Text, Image, Audio, Video, AST)
 └── v2.0 — Adaptive Intelligence Runtime (Dynamic model routing, dynamic context, self-evaluation)
 
-Here is the complete LMLM (Large Multimodal Learning Model) Technical Implementation Blueprint, combining Milestone v1.1 (Multi-Provider Model Adapter Engine), Milestone v1.2 (LMLM-RAG & Persistent Memory), and Milestone v1.4 (LMLM-CODEX Execution Runtime) into a unified, production-ready codebase.
+Here is the complete LMLM (Large Multimodal Learning Model)
 
+Technical Implementation Blueprint, combining Milestone v1.1 (Multi-Provider Model Adapter Engine), Milestone v1.2 (LMLM-RAG & Persistent Memory), and Milestone v1.4 (LMLM-CODEX Execution Runtime) into a unified, production-ready codebase.
+```Python
 1. Directory Structure
 lmlm/
 ├── pyproject.toml
@@ -434,11 +441,12 @@ lmlm/
 ├── tools/
 │   └── registry.py
 └── tests/
+```
 2. Milestone v1.1: Multi-Provider Async Model Adapter Engine
 This module provides a unified interface across OpenAI, Anthropic, and local Ollama/vLLM endpoints, complete with dynamic fallback handling.
 
 models/adapters/base.py
-Python
+```Python
 
 from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional
@@ -488,8 +496,9 @@ class MultiProviderRouter(BaseAsyncModelAdapter):
                 last_exception = e
                 continue
         raise RuntimeError(f"All model adapters failed. Last error: {last_exception}")
+```
 models/adapters/openai_adapter.py
-Python
+```Python
 
 import os
 import httpx
@@ -538,8 +547,9 @@ class OpenAIAsyncAdapter(BaseAsyncModelAdapter):
                 "completion_tokens": usage.get("completion_tokens", 0)
             }
         )
+```
 models/adapters/ollama_adapter.py
-Python
+```Python
 
 import httpx
 from typing import Any, Dict, Optional
@@ -578,11 +588,12 @@ class OllamaAsyncAdapter(BaseAsyncModelAdapter):
                 "prompt_eval_count": data.get("prompt_eval_count", 0)
             }
         )
+```
 3. Milestone v1.2: LMLM-RAG & Persistent Memory Pipeline
 This module manages document chunking, semantic vector indexing, episodic storage, and provenance attribution.
 
 retrieval/rag.py
-Python
+```Python
 
 import math
 import re
@@ -696,10 +707,11 @@ class LMLMRAGPipeline:
         """Deterministic pseudo-embedding vector generator for testing."""
         val = sum(ord(c) for c in text[:10]) % 100 / 100.0
         return [val, 1.0 - val, (val * 2) % 1.0]
+```
 4. Milestone v1.4: LMLM-CODEX Isolated Execution Environment
 This module handles sandboxed Python code execution, automated pytest assertion runs, and AST verification.
 
-codex/sandbox.py
+```codex/sandbox.py
 Python
 
 import asyncio
@@ -770,9 +782,10 @@ class CODEXSandbox:
                     stderr=str(e),
                     execution_time_ms=0.0
                 )
+```
 5. End-to-End Test Driver
 Here is a script that ties all components together, running a full end-to-end task through the orchestrator.
-main.py
+```main.py
 Python
 
 import asyncio
@@ -851,6 +864,7 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+```
 Canonical Roadmap Progress
 Version	Status	Core Modules
 v1.0	Locked	Production 9-Phase Core Engine, Typed State, Policy Gateway, Machine Verification
@@ -873,11 +887,11 @@ lmlm/
 └── adapters/
     └── cuda_accelerator.py # Native Python interface wrapper
 Implementation Files
-1. The CUDA Kernel (lmlm/kernels/fused_ops.cu)
+1. The CUDA Kernel (```lmlm/kernels/fused_ops.cu)
 A custom CUDA kernel for a fast element-wise fused scale-bias GELU activation:
 
 Code snippet
-
+```cuh
 #include <torch/extension.h>
 #include <cuda.h>
 #include <cuda_runtime.h>
@@ -938,9 +952,10 @@ torch::Tensor fused_bias_gelu_cuda(torch::Tensor input, torch::Tensor bias);
 PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
     m.def("fused_bias_gelu", &fused_bias_gelu_cuda, "Fused Bias + GELU CUDA Kernel (CUDA)");
 }
+```
 3. JIT CUDA Compiler (lmlm/kernels/compiler.py)
-Just-In-Time (JIT) compilation using torch.utils.cpp_extension:
-Python
+Just-In-Time (JIT) compilation using ```torch.utils.cpp_extension:
+```Python
 
 from pathlib import Path
 import torch
@@ -966,8 +981,9 @@ def get_cuda_ops():
             verbose=False
         )
     return _cuda_module
+```
 4. Integration into LMLM Pipeline (lmlm/adapters/cuda_accelerator.py)
-Python
+```Python
 
 import torch
 import torch.nn as nn
@@ -990,8 +1006,9 @@ class FusedBiasGELU(nn.Module):
         
         # CPU Fallback
         return torch.nn.functional.gelu(x + self.bias)
+```
 Testing the CUDA Kernel Integration
-Python
+```Python
 
 import torch
 from lmlm.adapters.cuda_accelerator import FusedBiasGELU
@@ -1007,7 +1024,7 @@ if __name__ == "__main__":
     # Execute custom kernel
     output = layer(dummy_input)
     print(f"Kernel execution successful. Output shape: {output.shape}")
-
+```
 lmlm/ 
 ├── pyproject.toml 
 ├── core/ 
@@ -1034,9 +1051,10 @@ lmlm/
 │   ├── init.py 
 │   └── registry.py 
 └── main.py
-
-
+```.bashzsh
 Tally api_key=tly-Xt8FI9BpnUY0KlvirQ49bXQLCioQJT9g
+```
+
 ```task.json
 { 
 "taskVersion": { 
