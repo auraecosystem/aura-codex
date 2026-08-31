@@ -1,0 +1,98 @@
+from pathlib import Path
+import zipfile
+
+root = Path("/mnt/data/APLCE")
+folders = [
+    "docs","textbook","slides","labs/ch01","labs/ch02","labs/ch03","labs/ch04",
+    "assignments","exams","examples/antlr","examples/bison","examples/flex",
+    "compiler/lexer","compiler/parser","compiler/ast","compiler/semantic",
+    "compiler/ir","compiler/backend","compiler/runtime",
+    "website","assets/diagrams","assets/images",".github/workflows"
+]
+
+for folder in folders:
+    (root / folder).mkdir(parents=True, exist_ok=True)
+
+readme = """# APLCE — Aura Programming Languages & Compiler Engineering
+
+APLCE is an open-source university-level curriculum and compiler engineering toolkit.
+
+## Repository Structure
+
+- textbook/ — Course textbook (16 chapters)
+- slides/ — Lecture presentations
+- labs/ — Practical compiler labs
+- compiler/ — Reference compiler implementation
+- examples/ — ANTLR, Flex, and Bison examples
+- website/ — Interactive documentation (VitePress)
+- docs/ — API and architecture documentation
+
+## Semester Roadmap
+
+1. Compiler Architecture
+2. Grammars (BNF/EBNF)
+3. Lexical Analysis
+4. Parsing (ANTLR & Bison)
+5. AST Construction
+6. Semantic Analysis
+7. LLVM IR
+8. Code Generation
+9. Optimization
+10. Q-Lang Compiler Project
+"""
+
+(root / "README.md").write_text(readme)
+
+(root / "LICENSE").write_text("MIT License\n")
+
+(root / ".gitignore").write_text("""node_modules/
+dist/
+build/
+coverage/
+*.class
+*.o
+*.out
+*.exe
+""")
+
+(root / "CONTRIBUTING.md").write_text("# Contributing to APLCE\n\nPull requests and issues are welcome.\n")
+
+(root / "CODE_OF_CONDUCT.md").write_text("# Code of Conduct\n\nBe respectful and collaborative.\n")
+
+(root / "docs" / "ARCHITECTURE.md").write_text("# APLCE Architecture\n\nCompiler pipeline, AST, semantic analysis, LLVM backend.\n")
+
+(root / "textbook" / "CH01_Compiler_Architecture.md").write_text("# Chapter 1\nIntroduction to Compiler Architecture.\n")
+(root / "textbook" / "CH04_ANTLR_vs_Bison.md").write_text("# Chapter 4\nANTLR vs Yacc/Bison.\n")
+
+(root / "labs" / "README.md").write_text("# APLCE Labs\n\nEach chapter contains hands-on exercises.\n")
+
+(root / "compiler" / "README.md").write_text("# APLCE Compiler\n\nReference implementation modules.\n")
+
+(root / "website" / "README.md").write_text("# APLCE Website\n\nVitePress documentation site.\n")
+
+workflow = """name: Build APLCE Docs
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install
+      - run: npm run docs:build
+"""
+(root / ".github" / "workflows" / "docs.yml").write_text(workflow)
+
+zip_path = "/mnt/data/APLCE_Repository_Bootstrap.zip"
+with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
+    for file in root.rglob("*"):
+        z.write(file, file.relative_to(root.parent))
+
+print(zip_path)
