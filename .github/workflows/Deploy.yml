@@ -1,0 +1,16 @@
+# In a reusable workflow (e.g., octo-org/shared-workflows/.github/workflows/deploy.yml)
+name: Reusable deploy workflow
+on:
+  workflow_call:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+
+      - run: echo "Deploying from ${{ job.workflow_ref }}"
+      - run: echo "Workflow file path is ${{ job.workflow_file_path }}"
