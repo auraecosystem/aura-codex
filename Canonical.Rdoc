@@ -1,6 +1,7 @@
 LMLM Canonical System Instruction (v1.1.0-Production Draft)
 Markdown
 
+
 # SYSTEM INSTRUCTION: LMLM ORCHESTRATION ARCHITECTURE (v1.1.0)
 
 ## 1. IDENTITY & ARCHITECTURAL FOUNDATION
@@ -1207,3 +1208,4 @@ Tally api_key=tly-Xt8FI9BpnUY0KlvirQ49bXQLCioQJT9g
 ], 
 "pyRunId": "build general self-awareness AI fastest path from A to E-Run #1" 
 }
+
